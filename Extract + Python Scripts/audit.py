@@ -14,7 +14,7 @@ from collections import defaultdict
 import re
 import pprint
 
-OSMFILE = "Irvine.osm"
+OSMFILE = "IrvineCopy.osm"
 street_type_re = re.compile(r'\b\S+\.?$', re.IGNORECASE)
 
 
@@ -58,12 +58,6 @@ def audit(osmfile):
     osm_file.close()
     return street_types
 
-def user_choice(choices, question):
-    choice = None
-    while choice not in choices:
-        choice = raw_input("\n" + question + "\n").upper()
-    return choice
-
 
 def update_name(name, mapping):
     name_split = name.split()
@@ -71,20 +65,29 @@ def update_name(name, mapping):
         if name_split[e] in mapping:
             name_split[e] = mapping[name_split[e]]
 
-    # print name_split
     name = " ".join(name_split)
+    return name
 
-    # Double Check update_name
+
+def user_choice(choices, question):
+    '''user_choice(LIST, STRING): prompts user input from list of avaible choices with question string'''
+    choice = None
+    while choice not in choices:
+        choice = raw_input("\n" + question + "\n").upper()
+    return choice
+
+
+def user_update(name, better_name):
+    '''user_update(string, string): Returns user input to update name'''
     check = 0
-    while check = 0:
-        update =  user_choice (['YES', 'Y', 'NO', 'N'], "\nShould This be Mapped?\n" + name + " => " + better_name)
+    while check == 0:
+        update = user_choice (['YES', 'Y', 'NO', 'N'], "\nShould This be Mapped?\n" + name + " => " + better_name)
         if update == 'YES' or update == 'Y':
             check = 1
         else:
-            better_name = string(raw_input())
+            better_name = raw_input("\nWhat is a better mapping?: " + name + "\n")
 
-
-    return name
+    return better_name
 
 
 def test():
@@ -96,13 +99,9 @@ def test():
         for name in ways:
             better_name = update_name(name, mapping)
             if name != better_name:
+                better_name = user_update(name, better_name)
                 print name, "=>", better_name
-            '''
-            if name == "West Lexington St.":
-                assert better_name == "West Lexington Street"
-            if name == "Baldwin Rd.":
-                assert better_name == "Baldwin Road"
-            '''
+
 
 if __name__ == '__main__':
     test()
