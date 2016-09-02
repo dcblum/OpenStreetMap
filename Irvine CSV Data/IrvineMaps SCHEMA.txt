@@ -1,0 +1,44 @@
+CREATE TABLE nodes_tags
+(
+	id INTEGER,
+	key VARCHAR,
+	value VARCHAR,
+	type VARCHAR
+);
+
+CREATE TABLE nodes
+(
+	id INTEGER,
+	lat FLOAT,
+	lon FLOAT,
+	user VARCHAR,
+	uid INTEGER,
+	version INTEGER,
+	changeset INTEGER,
+	timestamp TIMESTAMP
+);
+
+CREATE TABLE ways_tags
+(
+	id INTEGER,
+	key VARCHAR,
+	value VARCHAR,
+	type VARCHAR
+);
+
+CREATE TABLE ways_nodes
+(
+	id INTEGER,
+	node_id INTEGER,
+	position INTEGER
+);
+
+CREATE TABLE ways
+(
+	id INTEGER,
+	user VARCHAR,
+	uid INTEGER,
+	version INTEGER,
+	changeset INTEGER,
+	timestamp TIMESTAMP
+);
