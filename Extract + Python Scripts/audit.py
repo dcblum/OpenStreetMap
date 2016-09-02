@@ -25,8 +25,10 @@ mapping = { "St": "Street",
             "St.": "Street",
             "Ave" : "Avenue",
             "Blvd" : "Boulevard",
+            "Dr" : "Drive",
             "Dr." : "Drive",
             "CT" : "Court",
+            "Rd" : "Road",
             "Rd." : "Road",
             "PKWY" : "Parkway",
             "Pkwy." : "Parkway"}
@@ -56,6 +58,12 @@ def audit(osmfile):
     osm_file.close()
     return street_types
 
+def user_choice(choices, question):
+    choice = None
+    while choice not in choices:
+        choice = raw_input("\n" + question + "\n").upper()
+    return choice
+
 
 def update_name(name, mapping):
     name_split = name.split()
@@ -63,8 +71,18 @@ def update_name(name, mapping):
         if name_split[e] in mapping:
             name_split[e] = mapping[name_split[e]]
 
-    #print name_split
+    # print name_split
     name = " ".join(name_split)
+
+    # Double Check update_name
+    check = 0
+    while check = 0:
+        update =  user_choice (['YES', 'Y', 'NO', 'N'], "\nShould This be Mapped?\n" + name + " => " + better_name)
+        if update == 'YES' or update == 'Y':
+            check = 1
+        else:
+            better_name = string(raw_input())
+
 
     return name
 
