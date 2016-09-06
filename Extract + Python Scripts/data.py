@@ -47,7 +47,7 @@ def shape_element(element, node_attr_fields=NODE_FIELDS, way_attr_fields=WAY_FIE
                     # If there are no problem chars...
                     node_tags = {}
                     node_tags['id'] = node_attribs['id']
-                    node_tags['value'] = elem.get('v')
+                    node_tags['value'] = update_name(elem.get('v'), mapping)
 
 
                     if re.search(LOWER_COLON, elem.attrib['k']):
@@ -81,7 +81,7 @@ def shape_element(element, node_attr_fields=NODE_FIELDS, way_attr_fields=WAY_FIE
                     # If there are no problem chars...
                     way_tags = {}
                     way_tags['id'] = way_attribs['id']
-                    way_tags['value'] = elem.get('v')
+                    way_tags['value'] = update_name(elem.get('v'), mapping)
 
                     if re.search(LOWER_COLON, elem.attrib['k']):
                         elem_split = elem.attrib['k'].split(':', 1)
