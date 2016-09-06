@@ -101,6 +101,7 @@ def test():
             if name != better_name:
                 better_name = user_update(name, better_name)
                 print name, "=>", better_name
+                name = better_name
 
 
 if __name__ == '__main__':
