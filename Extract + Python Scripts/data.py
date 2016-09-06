@@ -45,20 +45,7 @@ def shape_element(element, node_attr_fields=NODE_FIELDS, way_attr_fields=WAY_FIE
             if elem.tag == 'tag':
                 if not re.search(PROBLEMCHARS, elem.attrib['k']):
                     # If there are no problem chars...
-                    node_tags = {}
-                    node_tags['id'] = node_attribs['id']
-                    node_tags['value'] = update_name(elem.get('v'), mapping)
-
-
-                    if re.search(LOWER_COLON, elem.attrib['k']):
-                        elem_split = elem.attrib['k'].split(':', 1)
-                        node_tags['key'] = elem_split[1]
-                        node_tags['type'] = elem_split[0]
-                    else:
-                        node_tags['key'] = elem.get('k')
-                        node_tags['type'] = 'regular'
-
-                    tags.append(node_tags)
+                    tags.append(shape_tag(elem, node_attribs))
 
         return {'node': node_attribs, 'node_tags': tags}
 
@@ -79,23 +66,31 @@ def shape_element(element, node_attr_fields=NODE_FIELDS, way_attr_fields=WAY_FIE
             if elem.tag == 'tag':
                 if not re.search(PROBLEMCHARS, elem.attrib['k']):
                     # If there are no problem chars...
-                    way_tags = {}
-                    way_tags['id'] = way_attribs['id']
-                    way_tags['value'] = update_name(elem.get('v'), mapping)
-
-                    if re.search(LOWER_COLON, elem.attrib['k']):
-                        elem_split = elem.attrib['k'].split(':', 1)
-                        way_tags['key'] = elem_split[1]
-                        way_tags['type'] = elem_split[0]
-                    else:
-                        way_tags['key'] = elem.get('k')
-                        way_tags['type'] = 'regular'
-
-                    tags.append(way_tags)
+                    tags.append(shape_tag(elem, way_attribs))
 
         return {'way': way_attribs, 'way_nodes': way_nodes, 'way_tags': tags}
 
+def shape_tag(elem, attribs):
+    '''Modifies tags from shape_element. Uses attributes from higher level tag'''
+    tags = {}
 
+    # Splits tag if colon present. Will only split the last colon in string.
+    if re.search(LOWER_COLON, elem.attrib['k']):
+        elem_split = elem.attrib['k'].split(':', 1)
+        tags['key'] = elem_split[1]
+        tags['type'] = elem_split[0]
+    else:
+        tags['key'] = elem.get('k')
+        tags['type'] = 'regular'
+
+    tags['id'] = attribs['id']
+
+    if tags['key'] == 'street':
+        tags['value'] = update_name(elem.get('v'), mapping)
+    else:
+        tags['value'] = elem.get('v')
+
+    return tags
 # ================================================== #
 #               Helper Functions                     #
 # ================================================== #
