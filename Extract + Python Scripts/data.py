@@ -9,11 +9,11 @@ import schema
 
 OSM_PATH = "Irvine.osm"
 
-NODES_PATH = "1nodes.csv"
-NODE_TAGS_PATH = "1nodes_tags.csv"
-WAYS_PATH = "1ways.csv"
-WAY_NODES_PATH = "1ways_nodes.csv"
-WAY_TAGS_PATH = "1ways_tags.csv"
+NODES_PATH = "nodes.csv"
+NODE_TAGS_PATH = "nodes_tags.csv"
+WAYS_PATH = "ways.csv"
+WAY_NODES_PATH = "ways_nodes.csv"
+WAY_TAGS_PATH = "ways_tags.csv"
 
 LOWER_COLON = re.compile(r'^([a-z]|_)+:([a-z]|_)+')
 PROBLEMCHARS = re.compile(r'[=\+/&<>;\'"\?%#$@\,\. \t\r\n]')
@@ -98,7 +98,6 @@ def shape_tag(elem, attribs):
         for item in postcode_split:
             if len(item) == 5:
                 tags['value'] = item
-
     else:
         tags['value'] = elem.get('v')
 
