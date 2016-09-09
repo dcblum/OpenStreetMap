@@ -9,11 +9,11 @@ import schema
 
 OSM_PATH = "Irvine.osm"
 
-NODES_PATH = "nodes.csv"
-NODE_TAGS_PATH = "nodes_tags.csv"
-WAYS_PATH = "ways.csv"
-WAY_NODES_PATH = "ways_nodes.csv"
-WAY_TAGS_PATH = "ways_tags.csv"
+NODES_PATH = "1nodes.csv"
+NODE_TAGS_PATH = "1nodes_tags.csv"
+WAYS_PATH = "1ways.csv"
+WAY_NODES_PATH = "1ways_nodes.csv"
+WAY_TAGS_PATH = "1ways_tags.csv"
 
 LOWER_COLON = re.compile(r'^([a-z]|_)+:([a-z]|_)+')
 PROBLEMCHARS = re.compile(r'[=\+/&<>;\'"\?%#$@\,\. \t\r\n]')
@@ -72,8 +72,8 @@ def shape_element(element, node_attr_fields=NODE_FIELDS, way_attr_fields=WAY_FIE
 
 def shape_tag(elem, attribs):
     '''Modifies tags from shape_element. Uses attributes from higher level tag'''
-    tags = {}
 
+    tags = {}
     # Splits tag if colon present. Will only split the last colon in string.
     if re.search(LOWER_COLON, elem.attrib['k']):
         elem_split = elem.attrib['k'].split(':', 1)
@@ -85,12 +85,56 @@ def shape_tag(elem, attribs):
 
     tags['id'] = attribs['id']
 
+    # Audits street value in tag based on function update_name
     if tags['key'] == 'street':
         tags['value'] = update_name(elem.get('v'), mapping)
+
+    # Finds and assigns postcode
+    elif tags['key'] == 'postcode':
+        postcode = elem.get('v')
+        tags['value'] = postcode
+        # Audits postcode
+        postcode_split = re.split('[ -]', postcode)
+        for item in postcode_split:
+            if len(item) == 5:
+                tags['value'] = item
+
     else:
         tags['value'] = elem.get('v')
 
     return tags
+
+#------------------------------------------------------------#
+#
+#------------------------------------------------------------#
+street_type_re = re.compile(r'\b\S+\.?$', re.IGNORECASE)
+
+
+expected = ["Street", "Avenue", "Boulevard", "Drive", "Court", "Place", "Square", "Lane", "Road", "Trail", "Parkway", "Ridge", "Commons", "Way", "Vista", "Terrace", "Circle", "Glen", "Grove", "Hill", "South", "East", "West", "North", "Tree", "Valley", "Creek", "Canyon", "Brook", "Bloom", "Springs", "Verde", "Arbor", "Center", "Loop"]
+
+# UPDATE THIS VARIABLE
+mapping = { "St": "Street",
+            "St.": "Street",
+            "Ave" : "Avenue",
+            "Blvd" : "Boulevard",
+            "Dr" : "Drive",
+            "Dr." : "Drive",
+            "CT" : "Court",
+            "Rd" : "Road",
+            "Rd." : "Road",
+            "PKWY" : "Parkway",
+            "Pkwy." : "Parkway"}
+
+def update_name(name, mapping):
+    name_split = name.split()
+    for e in range(len(name_split)):
+        if name_split[e] in mapping:
+            name_split[e] = mapping[name_split[e]]
+
+    name = " ".join(name_split)
+    return name
+
+
 # ================================================== #
 #               Helper Functions                     #
 # ================================================== #
@@ -176,4 +220,4 @@ def process_map(file_in, validate):
 if __name__ == '__main__':
     # Note: Validation is ~ 10X slower. For the project consider using a small
     # sample of the map when validating.
-    process_map(OSM_PATH, validate=True)
+    process_map(OSM_PATH, validate=True) # Run to actually process mapping
