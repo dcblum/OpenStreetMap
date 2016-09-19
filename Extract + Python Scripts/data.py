@@ -2,7 +2,6 @@ import csv
 import codecs
 import re
 import xml.etree.cElementTree as ET
-import audit
 import cerberus
 
 import schema
