@@ -1,5 +1,5 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
+# Majority of Code provided by Udacity later edited by myself, David Blum
+
 """
 Your task is to use the iterative parsing to process the map file and
 find out not only what tags are there, but also how many, to get the
